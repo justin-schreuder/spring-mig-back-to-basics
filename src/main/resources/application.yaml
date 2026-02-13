@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: mig-back-to-basics
+  datasource:
+    url: jdbc:mysql://localhost:3306/mig_basics
+    username: root
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
