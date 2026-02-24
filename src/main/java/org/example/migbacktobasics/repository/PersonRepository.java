@@ -6,9 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
-
-//    public String getAll() {
-//        return "Hello World";
-//    }
-
 }
