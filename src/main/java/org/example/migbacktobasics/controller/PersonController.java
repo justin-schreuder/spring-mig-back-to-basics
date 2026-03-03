@@ -5,6 +5,7 @@ import org.example.migbacktobasics.dto.PersonRequest;
 import org.example.migbacktobasics.dto.PersonResponse;
 import org.example.migbacktobasics.service.PersonService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,20 +27,28 @@ public class PersonController {
         this.service = service;
     }
 
+    @GetMapping("/public")
+    public String publicApi() {
+        return "I am open to all!";
+    }
+
+    @PreAuthorize("hasRole('VIEW')")
     @GetMapping("/all")
     public List<PersonResponse> getAll() {
         return service.getAll();
     }
 
+    @PreAuthorize("hasRole('EDIT')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@Valid @RequestBody PersonRequest person) {
         service.create(person);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) throws InterruptedException {
         service.delete(id);
     }
 

@@ -4,7 +4,9 @@ import org.example.migbacktobasics.dto.PersonRequest;
 import org.example.migbacktobasics.dto.PersonResponse;
 import org.example.migbacktobasics.entity.Person;
 import org.example.migbacktobasics.repository.PersonRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,14 +25,20 @@ public class PersonService {
             .toList();
     }
 
+    @Transactional
     public void create(PersonRequest person) {
         Person entity = new Person();
         entity.setFirstName(person.firstName());
         entity.setLastName(person.lastName());
-        repository.save(entity);
+        var saved = repository.save(entity);
+        if (saved.getId() % 2 == 1) {
+            throw new RuntimeException("Something went wrong");
+        }
     }
 
-    public void delete(Long id) {
+    @Async
+    public void delete(Long id) throws InterruptedException {
+        Thread.sleep(10_000L);
         repository.deleteById(id);
     }
 
