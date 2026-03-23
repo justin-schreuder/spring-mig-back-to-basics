@@ -8,3 +8,21 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Spring MIG Back to Basics
+    version: 1.0.0
+    description: Our first application

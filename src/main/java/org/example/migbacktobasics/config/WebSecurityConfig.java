@@ -20,7 +20,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth ->
-                auth.requestMatchers("/api/public/**").permitAll()
+                auth.requestMatchers("/api/public/**", "/actuator/**").permitAll()
                     .anyRequest().authenticated()
             )
             .httpBasic(Customizer.withDefaults())
