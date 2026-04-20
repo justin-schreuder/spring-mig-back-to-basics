@@ -18,10 +18,9 @@ public class PersonInfoEndpoint implements InfoContributor {
 
     @Override
     public void contribute(Info.Builder builder) {
-        var maxPerson = personRepository.findTopIdByOrderByIdDesc();
-        var maxId = maxPerson.isPresent() ? maxPerson.get().getId() : -1L;
-        Map<String, Long> personDetails = Map.of(
-            "total", personRepository.count(),
+        var maxId = personRepository.getHighestId();
+        Map<String, String> personDetails = Map.of(
+            "total", String.valueOf(personRepository.getTotalNumber()),
             "maxId", maxId
         );
         builder.withDetail("persons", personDetails);

@@ -48,7 +48,7 @@ public class PersonController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) throws InterruptedException {
+    public void delete(@PathVariable String id) throws InterruptedException {
         service.delete(id);
     }
 

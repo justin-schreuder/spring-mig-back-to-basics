@@ -1,14 +1,19 @@
 package org.example.migbacktobasics.repository;
 
-import org.example.migbacktobasics.entity.Person;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.example.migbacktobasics.model.Person;
 
-import java.util.Optional;
+import java.util.List;
 
-@Repository
-public interface PersonRepository extends JpaRepository<Person, Long> {
+public interface PersonRepository {
 
-    Optional<Person> findTopIdByOrderByIdDesc();
+    List<Person> findAll();
+
+    Person save(Person person);
+
+    void deleteById(String id);
+
+    String getHighestId();
+
+    long getTotalNumber();
 
 }

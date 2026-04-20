@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -36,11 +36,11 @@ class PersonControllerTest {
     @Test
     @WithMockUser
     void testGetAll() throws Exception {
-        when(service.getAll()).thenReturn(List.of(new PersonResponse(1L, "Jane", "Jackson")));
+        when(service.getAll()).thenReturn(List.of(new PersonResponse("abc123", "Jane", "Jackson")));
 
         mockMvc.perform(get("/api/all"))
             .andExpect(status().isOk())
-            .andExpect(content().json("[{\"id\":1,\"firstName\":\"Jane\",\"lastName\":\"Jackson\"}]"));
+            .andExpect(content().json("[{\"id\":\"abc123\",\"firstName\":\"Jane\",\"lastName\":\"Jackson\"}]"));
     }
 
     @Test
@@ -59,7 +59,7 @@ class PersonControllerTest {
     @Test
     @WithMockUser
     void testDelete() throws Exception {
-        doNothing().when(service).delete(anyLong());
+        doNothing().when(service).delete(anyString());
 
         mockMvc.perform(delete("/api/1")
                 .with(csrf()))

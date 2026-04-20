@@ -1,7 +1,7 @@
 package org.example.migbacktobasics.service;
 
 import org.example.migbacktobasics.dto.PersonRequest;
-import org.example.migbacktobasics.entity.Person;
+import org.example.migbacktobasics.model.Person;
 import org.example.migbacktobasics.repository.PersonRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,12 +32,12 @@ class PersonServiceTest {
     @Test
     void testGetAll() {
         var person1 = new Person();
-        person1.setId(1L);
+        person1.setId("xyz987");
         person1.setFirstName("Joe");
         person1.setFirstName("Johnson");
 
         var person2 = new Person();
-        person2.setId(2L);
+        person2.setId("abc123");
         person2.setFirstName("Jane");
         person2.setFirstName("Jackson");
 
@@ -58,7 +58,7 @@ class PersonServiceTest {
     @Test
     void testCreate() {
         var person = new Person();
-        person.setId(2L);
+        person.setId("abc123");
 
         when(repository.save(any(Person.class))).thenReturn(person);
 
@@ -70,7 +70,7 @@ class PersonServiceTest {
     @Test
     void testCreate_failWithException() {
         var person = new Person();
-        person.setId(1L);
+        person.setId("xyz987");
 
         when(repository.save(any(Person.class))).thenReturn(person);
 
@@ -82,11 +82,11 @@ class PersonServiceTest {
 
     @Test
     void testDelete() throws InterruptedException {
-        doNothing().when(repository).deleteById(anyLong());
+        doNothing().when(repository).deleteById(anyString());
 
-        service.delete(1L);
+        service.delete("xyz987");
 
-        verify(repository, times(1)).deleteById(1L);
+        verify(repository, times(1)).deleteById("xyz987");
     }
 
 }

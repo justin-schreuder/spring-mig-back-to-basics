@@ -1,7 +1,7 @@
 package org.example.migbacktobasics.dto;
 
 public record PersonResponse(
-    Long id,
+    String id,
     String firstName,
     String lastName
 ) {

@@ -1,6 +1,14 @@
 spring:
   application:
     name: mig-back-to-basics
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      database: mig_basics
+      username: root
+      password: example
   datasource:
     url: jdbc:mysql://localhost:3306/mig_basics
     username: root
@@ -26,3 +34,6 @@ info:
     name: Spring MIG Back to Basics
     version: 1.0.0
     description: Our first application
+
+mig:
+  repository-type: sql

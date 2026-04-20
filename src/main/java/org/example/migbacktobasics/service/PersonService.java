@@ -2,7 +2,7 @@ package org.example.migbacktobasics.service;
 
 import org.example.migbacktobasics.dto.PersonRequest;
 import org.example.migbacktobasics.dto.PersonResponse;
-import org.example.migbacktobasics.entity.Person;
+import org.example.migbacktobasics.model.Person;
 import org.example.migbacktobasics.repository.PersonRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -26,18 +26,18 @@ public class PersonService {
     }
 
     @Transactional
-    public void create(PersonRequest person) {
-        Person entity = new Person();
-        entity.setFirstName(person.firstName());
-        entity.setLastName(person.lastName());
-        var saved = repository.save(entity);
-        if (saved.getId() % 2 == 1) {
+    public void create(PersonRequest request) {
+        Person model = new Person();
+        model.setFirstName(request.firstName());
+        model.setLastName(request.lastName());
+        var saved = repository.save(model);
+        if (saved.getId().contains("x")) {
             throw new RuntimeException("Something went wrong");
         }
     }
 
     @Async
-    public void delete(Long id) throws InterruptedException {
+    public void delete(String id) throws InterruptedException {
         Thread.sleep(10_000L);
         repository.deleteById(id);
     }

@@ -1,26 +1,23 @@
 package org.example.migbacktobasics.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-public class Person {
+@Document(collection = "person")
+public class PersonMongoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
+    private String id;
 
     private String firstName;
 
     private String lastName;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -39,4 +36,5 @@ public class Person {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
 }
