@@ -1,7 +1,6 @@
 package org.example.migbacktobasics.repository;
 
 import org.example.migbacktobasics.adapter.PersonMongoAdapter;
-import org.example.migbacktobasics.entity.PersonMongoEntity;
 import org.example.migbacktobasics.model.Person;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
@@ -13,24 +12,26 @@ import java.util.List;
 public class PersonRepositoryMongoImpl implements PersonRepository {
 
     private final PersonMongoAdapter adapter;
+    private final PersonEntityMapper mapper;
 
-    public PersonRepositoryMongoImpl(PersonMongoAdapter adapter) {
+    public PersonRepositoryMongoImpl(PersonMongoAdapter adapter, PersonEntityMapper mapper) {
         this.adapter = adapter;
+        this.mapper = mapper;
     }
 
     @Override
     public List<Person> findAll() {
         return adapter.findAll()
             .stream()
-            .map(this::toModel)
+            .map(mapper::entityToPerson)
             .toList();
     }
 
     @Override
     public Person save(Person person) {
-        var entity = toEntity(person);
+        var entity = mapper.personToMongoEntity(person);
         var saved = adapter.save(entity);
-        return toModel(saved);
+        return mapper.entityToPerson(saved);
     }
 
     @Override
@@ -51,21 +52,6 @@ public class PersonRepositoryMongoImpl implements PersonRepository {
     @Override
     public long getTotalNumber() {
         return adapter.count();
-    }
-
-    private PersonMongoEntity toEntity(Person person) {
-        var entity = new PersonMongoEntity();
-        entity.setFirstName(person.getFirstName());
-        entity.setLastName(person.getLastName());
-        return entity;
-    }
-
-    private Person toModel(PersonMongoEntity entity) {
-        var model = new Person();
-        model.setId(entity.getId());
-        model.setFirstName(entity.getFirstName());
-        model.setLastName(entity.getLastName());
-        return model;
     }
 
 }

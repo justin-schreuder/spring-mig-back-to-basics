@@ -1,6 +1,5 @@
 package org.example.migbacktobasics.service;
 
-import org.example.migbacktobasics.dto.PersonRequest;
 import org.example.migbacktobasics.model.Person;
 import org.example.migbacktobasics.repository.PersonRepository;
 import org.junit.jupiter.api.Test;
@@ -49,32 +48,40 @@ class PersonServiceTest {
 
         assertEquals(2, result.size());
         for (var person : result) {
-            var expected = persons.stream().filter(e -> e.getId().equals(person.id())).findFirst().orElseThrow();
-            assertEquals(expected.getFirstName(), person.firstName());
-            assertEquals(expected.getLastName(), person.lastName());
+            var expected = persons.stream().filter(e -> e.getId().equals(person.getId())).findFirst().orElseThrow();
+            assertEquals(expected.getFirstName(), person.getFirstName());
+            assertEquals(expected.getLastName(), person.getLastName());
         }
     }
 
     @Test
     void testCreate() {
+        var mockPerson = new Person();
+        mockPerson.setId("abc123");
+
+        when(repository.save(any(Person.class))).thenReturn(mockPerson);
+
         var person = new Person();
-        person.setId("abc123");
+        person.setFirstName("Jane");
+        person.setLastName("Jackson");
 
-        when(repository.save(any(Person.class))).thenReturn(person);
-
-        service.create(new PersonRequest("Jane", "Jackson"));
+        service.create(person);
 
         verify(repository, times(1)).save(any(Person.class));
     }
 
     @Test
     void testCreate_failWithException() {
+        var mockPerson = new Person();
+        mockPerson.setId("xyz987");
+
+        when(repository.save(any(Person.class))).thenReturn(mockPerson);
+
         var person = new Person();
-        person.setId("xyz987");
+        person.setFirstName("Joe");
+        person.setLastName("Johnson");
 
-        when(repository.save(any(Person.class))).thenReturn(person);
-
-        var exception = assertThrows(RuntimeException.class, () -> service.create(new PersonRequest("Joe", "Johnson")));
+        var exception = assertThrows(RuntimeException.class, () -> service.create(person));
 
         verify(repository, times(1)).save(any(Person.class));
         assertEquals("Something went wrong", exception.getMessage());

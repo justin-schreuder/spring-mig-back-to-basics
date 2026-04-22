@@ -22,9 +22,11 @@ import java.util.List;
 public class PersonController {
 
     private final PersonService service;
+    private final PersonDtoMapper mapper;
 
-    public PersonController(PersonService service) {
+    public PersonController(PersonService service, PersonDtoMapper mapper) {
         this.service = service;
+        this.mapper = mapper;
     }
 
     @GetMapping("/public")
@@ -35,13 +37,17 @@ public class PersonController {
     @PreAuthorize("hasRole('VIEW')")
     @GetMapping("/all")
     public List<PersonResponse> getAll() {
-        return service.getAll();
+        return service.getAll()
+            .stream()
+            .map(mapper::personToResponse)
+            .toList();
     }
 
     @PreAuthorize("hasRole('EDIT')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody PersonRequest person) {
+    public void create(@Valid @RequestBody PersonRequest request) {
+        var person = mapper.requestToPerson(request);
         service.create(person);
     }
 

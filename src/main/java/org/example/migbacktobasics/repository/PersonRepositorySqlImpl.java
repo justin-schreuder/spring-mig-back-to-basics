@@ -1,7 +1,6 @@
 package org.example.migbacktobasics.repository;
 
 import org.example.migbacktobasics.adapter.PersonSqlAdapter;
-import org.example.migbacktobasics.entity.PersonSqlEntity;
 import org.example.migbacktobasics.model.Person;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
@@ -13,24 +12,26 @@ import java.util.List;
 public class PersonRepositorySqlImpl implements PersonRepository {
 
     private final PersonSqlAdapter adapter;
+    private final PersonEntityMapper mapper;
 
-    public PersonRepositorySqlImpl(PersonSqlAdapter adapter) {
+    public PersonRepositorySqlImpl(PersonSqlAdapter adapter, PersonEntityMapper mapper) {
         this.adapter = adapter;
+        this.mapper = mapper;
     }
 
     @Override
     public List<Person> findAll() {
         return adapter.findAll()
             .stream()
-            .map(this::toModel)
+            .map(mapper::entityToPerson)
             .toList();
     }
 
     @Override
     public Person save(Person person) {
-        var entity = toEntity(person);
+        var entity = mapper.personToSqlEntity(person);
         var saved = adapter.save(entity);
-        return toModel(saved);
+        return mapper.entityToPerson(saved);
     }
 
     @Override
@@ -51,21 +52,6 @@ public class PersonRepositorySqlImpl implements PersonRepository {
     @Override
     public long getTotalNumber() {
         return adapter.count();
-    }
-
-    private PersonSqlEntity toEntity(Person person) {
-        var entity = new PersonSqlEntity();
-        entity.setFirstName(person.getFirstName());
-        entity.setLastName(person.getLastName());
-        return entity;
-    }
-
-    private Person toModel(PersonSqlEntity entity) {
-        var model = new Person();
-        model.setId(entity.getId());
-        model.setFirstName(entity.getFirstName());
-        model.setLastName(entity.getLastName());
-        return model;
     }
 
 }

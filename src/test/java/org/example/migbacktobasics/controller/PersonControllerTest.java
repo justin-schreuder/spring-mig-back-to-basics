@@ -1,7 +1,7 @@
 package org.example.migbacktobasics.controller;
 
-import org.example.migbacktobasics.dto.PersonRequest;
 import org.example.migbacktobasics.dto.PersonResponse;
+import org.example.migbacktobasics.model.Person;
 import org.example.migbacktobasics.service.PersonService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +30,22 @@ class PersonControllerTest {
     @MockitoBean
     private PersonService service;
 
+    @MockitoBean
+    private PersonDtoMapper mapper;
+
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     @WithMockUser
     void testGetAll() throws Exception {
-        when(service.getAll()).thenReturn(List.of(new PersonResponse("abc123", "Jane", "Jackson")));
+        var person = new Person();
+        person.setId("abc123");
+        person.setFirstName("Jane");
+        person.setLastName("Jackson");
+
+        when(service.getAll()).thenReturn(List.of(person));
+        when(mapper.personToResponse(person)).thenReturn(new PersonResponse("abc123", "Jane", "Jackson"));
 
         mockMvc.perform(get("/api/all"))
             .andExpect(status().isOk())
@@ -46,7 +55,7 @@ class PersonControllerTest {
     @Test
     @WithMockUser
     void testCreate() throws Exception {
-        doNothing().when(service).create(any(PersonRequest.class));
+        doNothing().when(service).create(any(Person.class));
 
         mockMvc.perform(post("/api")
                 .contentType(MediaType.APPLICATION_JSON)
