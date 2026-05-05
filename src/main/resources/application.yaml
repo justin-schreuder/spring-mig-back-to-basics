@@ -36,4 +36,8 @@ info:
     description: Our first application
 
 mig:
-  repository-type: sql
+  repository-type: http
+  http:
+    url: http://localhost:8888
+    username: user
+    password: pass123
