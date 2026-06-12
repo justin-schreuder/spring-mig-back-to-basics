@@ -1,6 +1,7 @@
 package org.example.migbacktobasics.controller;
 
 import jakarta.validation.Valid;
+import org.example.migbacktobasics.aspect.Loggable;
 import org.example.migbacktobasics.dto.PersonRequest;
 import org.example.migbacktobasics.dto.PersonResponse;
 import org.example.migbacktobasics.service.PersonService;
@@ -29,6 +30,7 @@ public class PersonController {
         this.mapper = mapper;
     }
 
+    @Loggable
     @GetMapping("/public")
     public String publicApi() {
         return "I am open to all!";
