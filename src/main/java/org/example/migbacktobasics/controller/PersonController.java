@@ -33,7 +33,8 @@ public class PersonController {
     @Loggable
     @GetMapping("/public")
     public String publicApi() {
-        return "I am open to all!";
+//        return "I am open to all!";
+        throw new ArithmeticException("Oops!");
     }
 
     @PreAuthorize("hasRole('VIEW')")
